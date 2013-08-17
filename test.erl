@@ -15,7 +15,10 @@ test() ->
     io:format("----------~n"),
     io:format("testing gb_trees, naive~n"),
     Gbtree = gbtreetest_naive(),
-    {ok, {prop, Proplist}, {orddict, Orddict}, {dict, Dict}, {gb_tree_naive, Gbtree}}.
+    io:format("----------~n"),
+    io:format("testing gb_trees, smart~n"),
+    Gbtree_smart = gbtreetest_smart(),
+    {ok, {prop, Proplist}, {orddict, Orddict}, {dict, Dict}, {gb_tree_naive, Gbtree}, {gb_tree_smart, Gbtree_smart}}.
 
 proplist() ->
     ProplistInit = [{key1, value1}, {key2, value2}],
@@ -49,6 +52,16 @@ gbtreetest_naive() ->
     Tree3 = gb_trees:enter(key2, val2, Tree2),
     {value, Val} = gb_trees:lookup(key2, Tree3),
     none = gb_trees:lookup(key3, Tree3),
+    io:format("value: ~s~n", [Val]),
+    Size = gb_trees:size(Tree3),
+    {ok, Val, Size, {raw, Tree3}}.
+
+gbtreetest_smart() ->
+    Tree = gb_trees:empty(),
+    Tree2 = gb_trees:insert(key1, val1, Tree),
+    Tree3 = gb_trees:insert(key2, val2, Tree2),
+    Val = gb_trees:get(key2, Tree3),
+    %% gb_trees:get(key3, Tree3), %% this would send an error, this assumes we know that there is a value in there.
     io:format("value: ~s~n", [Val]),
     Size = gb_trees:size(Tree3),
     {ok, Val, Size, {raw, Tree3}}.
