@@ -10,6 +10,6 @@ test() ->
     _E1 = digraph:add_edge(G, V1, V2),
     _E2 = digraph:add_edge(G, V2, V3),
     Path = digraph:get_path(G, V1, V3),
-    %% io:format("path: ~s\n", [Path]),
+    io:format("path: ~p\n", [Path]),
     {ok, {digraph, Path}}.
 
