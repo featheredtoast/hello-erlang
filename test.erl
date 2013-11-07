@@ -61,7 +61,15 @@ gbtreetest_smart() ->
     Tree2 = gb_trees:insert(key1, val1, Tree),
     Tree3 = gb_trees:insert(key2, val2, Tree2),
     Val = gb_trees:get(key2, Tree3),
-    %% gb_trees:get(key3, Tree3), %% this would send an error, this assumes we know that there is a value in there.
+    try 
+        _Val2 = gb_trees:get(key3, Tree3) %% this would send an error, this assumes we know that there is a value in there.
+    catch
+        Exception:Reason -> {gbtreetest_smart_error(Exception, Reason), Exception, Reason}
+    end,
     io:format("value: ~s~n", [Val]),
     Size = gb_trees:size(Tree3),
     {ok, Val, Size, {raw, Tree3}}.
+
+gbtreetest_smart_error(Exception, Reason) ->
+    io:format("nope, this is an exception: ~s with reason ~s~n", [Exception, Reason]),
+    ok.
